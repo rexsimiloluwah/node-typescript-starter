@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import HttpError from './errors/HttpError';
-import { AuthRouter, ProductRouter, UserRouter } from './routes';
+import { AuthRouter, ProductRouter, UserRouter, AdminRouter } from './routes';
 import connectToMongo from './config/connectToMongo';
 import express, { Request, Response, NextFunction } from 'express';
 
@@ -27,6 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 let MONGODB_URI: string;
 const NODE_ENV = process.env.NODE_ENV;
 
+console.log(process.env.NODE_ENV);
+
 switch (NODE_ENV) {
     case 'development':
         MONGODB_URI = 'mongodb://localhost:27017/typescript-starter';
@@ -45,6 +47,7 @@ connectToMongo(MONGODB_URI);
 app.use('/api/v1/auth/', AuthRouter);
 app.use('/api/v1/products/', ProductRouter);
 app.use('/api/v1/users/', UserRouter);
+app.use('/api/v1/admin/', AdminRouter);
 
 // Error handling routes
 app.use((req: Request, res: Response, next: NextFunction) => {

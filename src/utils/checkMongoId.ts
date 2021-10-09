@@ -1,7 +1,7 @@
-import {Types} from 'mongoose';
+import { Types } from 'mongoose';
 
-const checkMongoId = (id:string):boolean => {
-    return Types.ObjectId.isValid(id)
-}
+const checkMongoId = (id: string): boolean => {
+    return Types.ObjectId.isValid(id);
+};
 
 export default checkMongoId;

@@ -18,10 +18,10 @@ export interface ProductDocument extends Document {
     description: string;
     price: number;
     quantity: number;
-    image?: string;
-    in_stock: boolean;
+    image?: string[];
+    inStock: boolean;
     tags: Array<string>;
-    user: string
+    user: string;
 }
 
 const ProductSchema: Schema = new Schema(
@@ -32,8 +32,8 @@ const ProductSchema: Schema = new Schema(
         description: { type: String, trim: true, required: true },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true },
-        image: { type: String, required: false },
-        in_stock: { type: Boolean, default: true },
+        image: [{ type: String, required: false }],
+        inStock: { type: Boolean, default: true },
         tags: { type: Array, required: false },
     },
     {
