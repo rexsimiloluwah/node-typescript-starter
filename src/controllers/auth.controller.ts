@@ -37,12 +37,11 @@ class AuthController {
             new User(req.body)
                 .save()
                 .then(async (user: UserDocument) => {
-                    try{
-                        if(user.role === 'user'){
-                            await Mailer.sendEmailVerificationLink(user)
+                    try {
+                        if (user.role === 'user') {
+                            await Mailer.sendEmailVerificationLink(user);
                         }
-                    }
-                    catch(error){
+                    } catch (error) {
                         return next(new HttpError(error.error, 500));
                     }
 
@@ -88,8 +87,8 @@ class AuthController {
                 return next(new HttpError('Incorrect Email or Password.', 401));
             }
 
-            if(user.isBanned){
-                return next(new HttpError("User is already banned !", 400));
+            if (user.isBanned) {
+                return next(new HttpError('User is already banned !', 400));
             }
 
             const accessToken = generateJwtToken(user);
@@ -97,7 +96,7 @@ class AuthController {
             refreshToken.accessToken = accessToken;
             setTokenCookie(res, refreshToken.refreshToken);
             await refreshToken.save();
-            console.log(refreshToken)
+            console.log(refreshToken);
 
             return res.status(200).json({
                 status: true,
@@ -162,10 +161,9 @@ class AuthController {
             });
         }
 
-        try{
-            await Mailer.sendEmailVerificationLink(user)
-        }
-        catch(error){
+        try {
+            await Mailer.sendEmailVerificationLink(user);
+        } catch (error) {
             return next(new HttpError(error.error, 500));
         }
 
@@ -186,10 +184,9 @@ class AuthController {
             return next(new HttpError('User does not exist.', 400));
         }
 
-        try{
+        try {
             await Mailer.sendPasswordResetLink(user);
-        }
-        catch(error){
+        } catch (error) {
             console.log(error);
             return next(new HttpError(error.error, 500));
         }
@@ -253,12 +250,12 @@ class AuthController {
         setTokenCookie(res, newRefreshToken.refreshToken);
         res.status(200).json({
             status: true,
-            message: "Successfully refreshed token.",
+            message: 'Successfully refreshed token.',
             data: {
                 user: basicDetails(user),
                 accessToken,
                 refreshToken: newRefreshToken.refreshToken,
-            }
+            },
         });
     }
 }

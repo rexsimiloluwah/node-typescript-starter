@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import { UserDocument } from '../models/User';
 import { emailTemplate } from '../utils/emailTemplate';
-import jwt from 'jsonwebtoken';
 import { generateEmailVerificationToken, generateResetPasswordToken } from '../utils/token';
 import * as dotenv from 'dotenv';
 

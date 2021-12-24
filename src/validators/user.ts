@@ -36,7 +36,7 @@ class UserValidator {
                 twitter: Joi.string(),
                 instagram: Joi.string(),
                 rating: Joi.number(),
-            }
+            },
         });
 
         return schema.validate(data);
@@ -60,7 +60,6 @@ class UserValidator {
 
         return schema.validate(data);
     }
-
 }
 
 export default new UserValidator();

@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-import { NextFunction } from 'express';
 import mongoose, { model, Document, Model, Schema } from 'mongoose';
 import { Role } from '../types/general';
 

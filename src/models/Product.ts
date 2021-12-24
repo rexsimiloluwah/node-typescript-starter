@@ -18,7 +18,7 @@ export interface ProductDocument extends Document {
     description: string;
     price: number;
     quantity: number;
-    image?: string[];
+    image?: Array<string>;
     inStock: boolean;
     tags: Array<string>;
     user: string;

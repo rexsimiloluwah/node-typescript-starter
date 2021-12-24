@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { UserDocument } from '../models/User';
 import { Token, TokenDocument } from '../models/Token';
-import { NextFunction,Response } from 'express';
+import { NextFunction, Response } from 'express';
 import HttpError from '../errors/HttpError';
 
 export function generateRandomToken(): string {
@@ -10,7 +10,7 @@ export function generateRandomToken(): string {
 }
 
 export function generateJwtToken(user: UserDocument): string {
-    return jwt.sign({ id: user._id, email: user.email}, process.env.JWT_SECRET_KEY as string, {
+    return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET_KEY as string, {
         expiresIn: process.env.JWT_EXPIRES_IN as string,
     });
 }
@@ -23,27 +23,27 @@ export function generateRefreshToken(user: UserDocument): TokenDocument {
     });
 }
 
-export function generateResetPasswordToken(user: UserDocument):string {
-    return jwt.sign({ id: user._id, email: user.email}, process.env.JWT_RESET_PASSWORD as string, {
+export function generateResetPasswordToken(user: UserDocument): string {
+    return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_RESET_PASSWORD as string, {
         expiresIn: process.env.JWT_EXPIRES_IN as string,
     });
 }
 
-export function generateEmailVerificationToken(user: UserDocument):string {
+export function generateEmailVerificationToken(user: UserDocument): string {
     /* Email verification token. Expires in 24 hours */
-    const {id, email} = user;
-    return jwt.sign({ id:id, email:email }, process.env.JWT_EMAIL_VERIFICATION as string, {
+    const { id, email } = user;
+    return jwt.sign({ id: id, email: email }, process.env.JWT_EMAIL_VERIFICATION as string, {
         expiresIn: '24h',
     });
 }
 
-export async function getRefreshToken(token:string, next:NextFunction):Promise<any> {
-    const refreshToken = await Token.findOne({ refreshToken : token}).populate('user');
-    if(!refreshToken){
-        return next(new HttpError("Token is Invalid.", 400));
+export async function getRefreshToken(token: string, next: NextFunction): Promise<any> {
+    const refreshToken = await Token.findOne({ refreshToken: token }).populate('user');
+    if (!refreshToken) {
+        return next(new HttpError('Token is Invalid.', 400));
     }
-    if(!refreshToken || !refreshToken.isActive || refreshToken.isExpired){
-        return next(new HttpError("Token is expired or inactive.", 400));
+    if (!refreshToken || !refreshToken.isActive || refreshToken.isExpired) {
+        return next(new HttpError('Token is expired or inactive.', 400));
     }
 
     return refreshToken;

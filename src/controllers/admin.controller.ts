@@ -8,8 +8,8 @@ import { basicDetails } from '../utils/basicDetails';
 import UserValidator from '../validators/user';
 import { generateJwtToken, generateRefreshToken, getRefreshToken, setTokenCookie } from '../utils/token';
 
-class AdminController{
-    public async loginAdmin(req:Request,res:Response,next:NextFunction){
+class AdminController {
+    public async loginAdmin(req: Request, res: Response, next: NextFunction) {
         const { error } = UserValidator.userLoginValidator(req.body);
         if (error) {
             return next(new HttpError(error.details[0].message, 400));
@@ -23,8 +23,8 @@ class AdminController{
             if (!user) {
                 return next(new HttpError('An account with this email does not exist.', 404));
             }
-            if(user.role !== 'admin'){
-                return next(new HttpError("This user is not a registered Admin.", 400));
+            if (user.role !== 'admin') {
+                return next(new HttpError('This user is not a registered Admin.', 400));
             }
             const passwordMatch = bcrypt.compareSync(`${password}`, `${user.password}`);
             if (!passwordMatch) {
@@ -36,7 +36,7 @@ class AdminController{
             refreshToken.accessToken = accessToken;
             setTokenCookie(res, refreshToken.refreshToken);
             await refreshToken.save();
-            console.log(refreshToken)
+            console.log(refreshToken);
 
             return res.status(200).json({
                 status: true,
@@ -50,33 +50,33 @@ class AdminController{
         });
     }
 
-    public async banUser(req:Request, res:Response,next:NextFunction){
+    public async banUser(req: Request, res: Response, next: NextFunction) {
         const userId = req.params.id;
-        if(!checkMongoId(userId)){
-            return next(new HttpError("User ID is invalid!", 422));
+        if (!checkMongoId(userId)) {
+            return next(new HttpError('User ID is invalid!', 422));
         }
-        const user = await User.findOne({_id : userId});
+        const user = await User.findOne({ _id: userId });
         console.log(user);
 
-        if(!user){
-            return next(new HttpError("Unable to ban, User not found !", 400));
+        if (!user) {
+            return next(new HttpError('Unable to ban, User not found !', 400));
         }
 
-        if(user.role === 'admin'){
-            return next(new HttpError("Cannot ban an admin !", 400));
+        if (user.role === 'admin') {
+            return next(new HttpError('Cannot ban an admin !', 400));
         }
 
-        if(user.isBanned){
-            return next(new HttpError("User is already banned !", 400));
+        if (user.isBanned) {
+            return next(new HttpError('User is already banned !', 400));
         }
 
-        user.isBanned = true
+        user.isBanned = true;
         await user.save();
 
         return res.status(200).json({
-            message : "User banned successfully!",
-            data : req.body
-        })
+            message: 'User banned successfully!',
+            data: req.body,
+        });
     }
 }
 
