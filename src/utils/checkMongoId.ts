@@ -1,7 +1,7 @@
-import { Types } from 'mongoose';
+import { Types } from 'mongoose'
 
 const checkMongoId = (id: string): boolean => {
-    return Types.ObjectId.isValid(id);
-};
+  return Types.ObjectId.isValid(id)
+}
 
-export default checkMongoId;
+export default checkMongoId

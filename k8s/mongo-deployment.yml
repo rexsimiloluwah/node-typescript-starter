@@ -1,0 +1,49 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: nts-mongo-deployment
+  labels:
+    app: nts-mongo-deployment 
+
+spec:
+  replicas: 2 #number of desired pods
+  selector:
+    matchLabels:
+      app: nts-mongo-deployment
+  strategy: #desired strategy for replacing existing pods with new ones
+    type: RollingUpdate 
+    rollingUpdate:
+      maxSurge: 3 
+  template:
+    metadata:
+      labels:
+        app: nts-mongo-deployment 
+    spec:
+      containers:
+        - name: nts-mongo-deployment
+          image: mongo:latest  
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "300Mi"
+          ports:
+            - containerPort: 27017
+          envFrom:
+            - configMapRef:
+                name: nts-mongo-configmap  
+            - secretRef: 
+                name: nts-mongo-secret 
+
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: nts-mongo-service 
+spec:
+  selector:
+    app: nts-mongo-deployment 
+  type: ClusterIP
+  ports: 
+    - port: 27017
+      targetPort: 27017 
+      protocol: TCP 

@@ -1,0 +1,84 @@
+version: "3.3"
+
+services:
+  database:
+    image: mongo
+    ports:
+      - 27017:27017 
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_AUTH_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_AUTH_PASSWORD}
+      - MONGO_INITDB_DATABASE=nodejs-typescript-starter
+    restart: always
+
+  test-database:
+    image: mongo 
+    ports:
+      - 27018:27017 
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_AUTH_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_AUTH_PASSWORD}
+      - MONGO_INITDB_DATABASE=nodejs-typescript-starter-test
+
+  backend:
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    ports: 
+      - 5040:5040 
+    depends_on:
+      - database
+    env_file:
+      - ./docker.env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - MONGO_HOST=database  
+      - REDIS_URL=redis:6379
+      - SERVER_HOST=0.0.0.0
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_AUTH_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_AUTH_PASSWORD}
+      - ME_CONFIG_MONGODB_URL=mongodb://${MONGO_AUTH_USER}:${MONGO_AUTH_PASSWORD}@database:27017/
+    depends_on:
+      - database 
+
+  redis:
+    image: redis 
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes 
+    ports:
+      - 6379:6379 
+
+  redis-commander:
+    image: rediscommander/redis-commander 
+    restart: always 
+    environment:
+      - REDIS_HOSTS=local:redis:6379 
+    ports:
+      - 8082:8081 
+    depends_on:
+      - redis
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus 
+      - prometheus_data:/prometheus 
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=20d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    restart: always
+
+volumes: 
+  prometheus_data: {}

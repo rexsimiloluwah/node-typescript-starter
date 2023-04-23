@@ -1,0 +1,4 @@
+[2023-03-02T21:48:41.541Z] [32minfo[39m: mongodb://localhost:27017/nodejs-typescript-starter
+[2023-03-02T21:48:41.644Z] [32minfo[39m: Server is running on port: 5042
+[2023-03-02T21:48:41.644Z] [32minfo[39m: Metrics server is running on port 9100!
+[2023-03-02T21:48:41.926Z] [32minfo[39m: MongoDB database successfully connected at localhost

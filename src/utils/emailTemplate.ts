@@ -1,5 +1,10 @@
-export const emailTemplate = (contentHeader: string, message: string, redirectLink: string, btnText: string) => {
-    return `
+export const emailTemplate = (
+  contentHeader: string,
+  message: string,
+  redirectLink: string,
+  btnText: string,
+): string => {
+  return `
     <html>
     <head>
       <meta charset="utf-8">
@@ -142,5 +147,5 @@ export const emailTemplate = (contentHeader: string, message: string, redirectLi
 
       </table>
     </body>
-    </html>`;
-};
+    </html>`
+}

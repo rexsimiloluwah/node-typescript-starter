@@ -1,0 +1,13 @@
+apiVersion: v1 
+kind: ConfigMap 
+metadata:
+  name: nts-backend-configmap 
+data:
+   NODE_ENV: development 
+   MONGO_HOST: nts-mongo-service
+   MONGO_DB_NAME: nodejs-typescript-starter
+   JWT_EXPIRES_IN: 24h
+   EMAIL_FROM: rexsimiloluwa@gmail.com
+   CLIENT_URL: http://localhost:5000
+   REDIS_URL: localhost:6379
+   SERVER_HOST: nts-backend-service

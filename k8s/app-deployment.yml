@@ -1,0 +1,50 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: nts-backend-deployment
+  labels:
+    app: nts-backend-deployment 
+
+spec:
+  replicas: 2 #number of desired pods
+  selector:
+    matchLabels:
+      app: nts-backend-deployment
+  strategy: #desired strategy for replacing existing pods with new ones
+    type: RollingUpdate 
+    rollingUpdate:
+      maxSurge: 3 
+  template:
+    metadata:
+      labels:
+        app: nts-backend-deployment 
+    spec:
+      containers:
+        - name: nts-backend-deployment
+          image: similoluwaokunowo/nts-backend 
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "300Mi"
+          ports:
+            - containerPort: 5040 
+          envFrom:
+            - configMapRef:
+                name: nts-backend-configmap  
+            - secretRef: 
+                name: nts-backend-secret 
+
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: nts-backend-service 
+spec:
+  selector:
+    app: nts-backend-deployment 
+  type: NodePort
+  ports: 
+    - port: 5040
+      targetPort: 5040 
+      nodePort: 30003
+      protocol: TCP 
